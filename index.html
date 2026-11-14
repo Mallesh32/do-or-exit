@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b12"><meta name="description" content="DO OR EXIT — one-life brain challenge">
+<title>DO OR EXIT — One Life Brain Challenge</title>
+<style>
+:root{--bg:#090b12;--panel:#121725;--panel2:#192235;--text:#f5f7ff;--muted:#9aa7bd;--red:#ff405d;--cyan:#62e6df;--gold:#ffc857}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#252b47 0,#090b12 55%);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif;min-height:100vh}
+button,input{font:inherit}button{cursor:pointer;border:0;border-radius:14px;padding:14px 18px;font-weight:800;color:#080b12;background:var(--cyan);transition:.15s}button:active{transform:scale(.98)}button:disabled{opacity:.4;cursor:not-allowed}
+.wrap{width:min(920px,100%);margin:auto;padding:22px 16px 48px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:1000;letter-spacing:.12em;font-size:clamp(20px,4vw,30px)}.brand span{color:var(--red)}.pill{border:1px solid #39445b;border-radius:999px;padding:8px 12px;color:var(--muted);font-size:12px}
+.hero{text-align:center;padding:46px 8px 24px}.eyebrow{color:var(--red);font-weight:900;letter-spacing:.22em;font-size:12px}.hero h1{font-size:clamp(42px,10vw,78px);line-height:.95;margin:14px 0}.hero h1 em{font-style:normal;color:var(--red)}.hero p{color:var(--muted);max-width:580px;margin:18px auto;line-height:1.6}
+.card{background:linear-gradient(145deg,#171e30,#101522);border:1px solid #29334a;border-radius:22px;padding:22px;box-shadow:0 18px 50px #0005}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}.stat{background:#0c1220;border:1px solid #273149;border-radius:15px;padding:14px;text-align:center}.stat b{display:block;font-size:24px}.stat small{color:var(--muted)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px}.secondary{background:#222c41;color:var(--text);border:1px solid #394762}.danger{background:var(--red);color:white}.gold{color:var(--gold)}
+.hidden{display:none!important}.section-title{font-size:13px;letter-spacing:.15em;color:var(--muted);font-weight:900}.question{font-size:clamp(25px,6vw,42px);font-weight:900;text-align:center;margin:24px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}.answer{background:#202b40;color:white;border:1px solid #3a4964;min-height:60px}.answer.selected{border:2px solid var(--cyan);background:#15333a}.bar{height:8px;background:#263047;border-radius:20px;overflow:hidden;margin:12px 0 20px}.bar>div{height:100%;background:linear-gradient(90deg,var(--cyan),#9bffbb);width:0;transition:width .3s}
+.notice{border-left:3px solid var(--gold);padding:10px 13px;background:#2a2418;color:#e8d9ad;border-radius:8px;font-size:13px;line-height:1.5;margin-top:16px}.muted{color:var(--muted);line-height:1.6}.input{width:100%;padding:14px;border:1px solid #3a4964;border-radius:12px;background:#0c1220;color:white;margin:8px 0 14px}.footer{text-align:center;color:#69758a;font-size:12px;margin-top:30px}
+@media(max-width:560px){.grid{grid-template-columns:1fr 1fr}.answers{grid-template-columns:1fr}.card{padding:17px}.hero{padding-top:34px}}
+</style>
+</head>
+<body><main class="wrap">
+<header class="top"><div class="brand">DO <span>OR</span> EXIT</div><div class="pill">ONE-LIFE BRAIN CHALLENGE</div></header>
+<section id="home">
+ <div class="hero"><div class="eyebrow">THINK CLEAR. CHOOSE ONCE.</div><h1>DO <em>OR</em><br>EXIT.</h1><p>Every question tests your logic, memory and attention. One wrong answer ends your current championship run. Can you reach the final gate?</p></div>
+ <div class="card">
+  <div class="section-title">YOUR PLAYER PROFILE</div>
+  <label class="muted" for="player">Choose a player name</label><input id="player" class="input" maxlength="18" placeholder="Enter nickname">
+  <div class="grid"><div class="stat"><b id="best">0</b><small>Best level</small></div><div class="stat"><b id="status">READY</b><small>Run status</small></div><div class="stat"><b>100</b><small>Levels to win</small></div></div>
+  <div class="actions"><button id="start">START ONE-LIFE RUN</button><button class="secondary" id="practice">PRACTICE MODE</button></div>
+  <div class="notice"><b>Fair-play rule:</b> A wrong answer permanently ends a ranked run on this device. Your profile and history are retained; this prototype never deletes accounts or personal data.</div>
+ </div>
+ <div class="card" style="margin-top:16px"><div class="section-title">HOW TO PLAY</div><p class="muted">Answer one question at a time. Correct answers advance you. In ranked mode, one mistake ends that run. Practice mode lets you learn without affecting your record. The first version uses sample puzzles and local device storage.</p></div>
+</section>
+<section id="game" class="hidden">
+ <div class="top"><div class="pill" id="modeLabel">RANKED RUN</div><div class="pill">LEVEL <b id="level">1</b> / 100</div></div>
+ <div class="bar"><div id="progress"></div></div>
+ <div class="card">
+  <div class="section-title" id="category">LOGIC TEST</div>
+  <div class="question" id="prompt">Question</div>
+  <div class="answers" id="answers"></div>
+  <p class="muted" id="feedback" style="text-align:center;min-height:24px"></p>
+  <div class="actions"><button id="submit" disabled>LOCK ANSWER</button><button class="secondary" id="leave">EXIT RUN</button></div>
+ </div>
+</section>
+<section id="result" class="hidden">
+ <div class="hero"><div class="eyebrow" id="resultEyebrow">RUN COMPLETE</div><h1 id="resultTitle">YOU SURVIVED</h1><p id="resultText"></p></div>
+ <div class="card"><div class="grid"><div class="stat"><b id="score">0</b><small>Correct answers</small></div><div class="stat"><b id="record">0</b><small>Best level</small></div><div class="stat"><b id="resultMode">RANKED</b><small>Run type</small></div></div><div class="actions"><button id="homeBtn">BACK TO HOME</button></div></div>
+</section>
+<div class="footer">DO OR EXIT • Prototype v0.1 • No real-money entry or prizes enabled</div>
+</main>
+<script>
+const bank=[
+["LOGIC","2, 4, 8, 16, ? ",["24","30","32","36"],2,"Each number doubles."],
+["ATTENTION","Which word is spelled correctly?",["Definately","Definitely","Definatly","Definetely"],1,"Definitely is the correct spelling."],
+["MATH","A farmer has 17 sheep. All but 9 run away. How many remain?",["8","9","17","0"],1,"All but 9 means 9 remain."],
+["LOGIC","What comes next: 1, 1, 2, 3, 5, 8, ?",["11","12","13","15"],2,"Add the previous two numbers."],
+["TRICK QUESTION","How many months have 28 days?",["1","2","6","12"],3,"All 12 months have at least 28 days."],
+["PATTERN","Find the missing number: 3, 6, 12, 24, ?",["36","42","48","54"],2,"The sequence doubles."],
+["OBSERVATION","You pass the person in second place in a race. What place are you in?",["First","Second","Third","Last"],1,"You take their second-place position."],
+["MATH","A clock shows 3:15. What is the angle between its hands?",["0°","7.5°","15°","30°"],1,"The minute hand is at 90°; hour hand at 97.5°."],
+["LOGIC","If 5 machines make 5 items in 5 minutes, how long for 100 machines to make 100 items?",["5 minutes","20 minutes","100 minutes","500 minutes"],0,"Each machine makes one item in five minutes."],
+["MEMORY","Remember this code: 7 – 2 – 9 – 4. What was the third digit?",["2","4","7","9"],3,"The third digit was 9."]
+];
+let selected=-1,index=0,correct=0,ranked=true,questions=[];
+const $=id=>document.getElementById(id);
+function load(){let p=JSON.parse(localStorage.getItem("doexit_profile")||'{"best":0,"eliminated":false,"name":""}');$("best").textContent=p.best;$("status").textContent=p.eliminated?"ELIMINATED":"READY";$("player").value=p.name||"";$("start").disabled=p.eliminated;$("start").textContent=p.eliminated?"RANKED LIFE USED":"START ONE-LIFE RUN";}
+function saveProfile(update){let p=JSON.parse(localStorage.getItem("doexit_profile")||'{"best":0,"eliminated":false,"name":""}');Object.assign(p,update);localStorage.setItem("doexit_profile",JSON.stringify(p));load();return p;}
+function show(id){["home","game","result"].forEach(x=>$(x).classList.toggle("hidden",x!==id));}
+function start(isRanked){ranked=isRanked;let p=JSON.parse(localStorage.getItem("doexit_profile")||'{"best":0,"eliminated":false}');if(ranked&&p.eliminated){alert("Your ranked life has already been used on this device. Practice mode remains available.");return;}let name=$("player").value.trim()||"Player";saveProfile({name});questions=[...bank];while(questions.length<100)questions.push(...bank);questions=questions.slice(0,100);index=0;correct=0;show("game");$("modeLabel").textContent=ranked?"RANKED ONE-LIFE RUN":"PRACTICE MODE";render();}
+function render(){selected=-1;let q=questions[index];$("level").textContent=index+1;$("progress").style.width=(index/100*100)+"%";$("category").textContent=q[0];$("prompt").textContent=q[1];$("feedback").textContent="";$("submit").disabled=true;$("answers").innerHTML="";q[2].forEach((a,i)=>{let b=document.createElement("button");b.className="answer";b.textContent=a;b.onclick=()=>{selected=i;[...$("answers").children].forEach(x=>x.classList.remove("selected"));b.classList.add("selected");$("submit").disabled=false;};$("answers").appendChild(b);});}
+function finish(eliminated,won=false){if(ranked&&eliminated)saveProfile({eliminated:true,best:Math.max(index,JSON.parse(localStorage.getItem("doexit_profile")||'{"best":0}').best||0)});else if(ranked)saveProfile({best:Math.max(index+1,JSON.parse(localStorage.getItem("doexit_profile")||'{"best":0}').best||0)});$("resultEyebrow").textContent=won?"CHAMPION":eliminated?"ONE MISTAKE":"RUN ENDED";$("resultTitle").textContent=won?"YOU CONQUERED 100":"RUN OVER";$("resultText").textContent=won?"Incredible focus. You completed all 100 levels.":eliminated?"Your ranked run has ended. Your profile and record remain saved. Practice is still open.":"You exited the run. Your ranked life was not consumed."; $("score").textContent=correct;$("record").textContent=JSON.parse(localStorage.getItem("doexit_profile")||'{"best":0}').best;$("resultMode").textContent=ranked?"RANKED":"PRACTICE";show("result");}
+$("submit").onclick=()=>{let q=questions[index];if(selected===q[4]){correct++;$("feedback").textContent="CORRECT — "+q[5];$("feedback").style.color="#62e6df";setTimeout(()=>{index++;if(index>=100)finish(false,true);else render();},650);}else{$("feedback").textContent="INCORRECT — "+q[5];$("feedback").style.color="#ff6077";setTimeout(()=>finish(ranked,false),800);}};
+$("start").onclick=()=>start(true);$("practice").onclick=()=>start(false);$("leave").onclick=()=>finish(false);$("homeBtn").onclick=()=>{show("home");load();};load();
+</script></body></html>
