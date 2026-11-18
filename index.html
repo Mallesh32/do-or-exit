@@ -70,4 +70,18 @@ function render(){selected=-1;let q=questions[index];$("level").textContent=inde
 function finish(eliminated,won=false){if(ranked&&eliminated)saveProfile({eliminated:true,best:Math.max(index,JSON.parse(localStorage.getItem("doexit_profile")||'{"best":0}').best||0)});else if(ranked)saveProfile({best:Math.max(index+1,JSON.parse(localStorage.getItem("doexit_profile")||'{"best":0}').best||0)});$("resultEyebrow").textContent=won?"CHAMPION":eliminated?"ONE MISTAKE":"RUN ENDED";$("resultTitle").textContent=won?"YOU CONQUERED 100":"RUN OVER";$("resultText").textContent=won?"Incredible focus. You completed all 100 levels.":eliminated?"Your ranked run has ended. Your profile and record remain saved. Practice is still open.":"You exited the run. Your ranked life was not consumed."; $("score").textContent=correct;$("record").textContent=JSON.parse(localStorage.getItem("doexit_profile")||'{"best":0}').best;$("resultMode").textContent=ranked?"RANKED":"PRACTICE";show("result");}
 $("submit").onclick=()=>{let q=questions[index];if(selected===q[3]){correct++;$("feedback").textContent="CORRECT — "+q[4];$("feedback").style.color="#62e6df";setTimeout(()=>{index++;if(index>=100)finish(false,true);else render();},650);}else{$("feedback").textContent="INCORRECT — "+q[4];$("feedback").style.color="#ff6077";setTimeout(()=>finish(ranked,false),800);}};
 $("start").onclick=()=>start(true);$("practice").onclick=()=>start(false);$("leave").onclick=()=>finish(false);$("homeBtn").onclick=()=>{show("home");load();};load();
-</script></body></html>
+// DO OR EXIT Supabase connection
+let supabaseClient;
+
+(async function connectSupabase() {
+  const { createClient } = await import(
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
+  );
+
+  supabaseClient = createClient(
+    "https://ewphqdfwbsbjekiukqfg.supabase.co",
+    "sb_publishable_0WR59y-jZnMYf7foWCeGcA_ybqZm7N7"
+  );
+
+  console.log("DO OR EXIT database connected");
+})();</script></body></html>
